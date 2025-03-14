@@ -30,6 +30,15 @@ def retrieve_epdata(ra=None, dec=None, radius=None, start=None, end=None, url="h
 
 
 def retrieve_gwdata(far=1/(365.25*24*3600),classification='BBH',url="https://gracedb.ligo.org/api/superevents/"):
+    """
+    Args:
+        far (float, optional): False Alarm Rate. Defaults to 1/(365.25*24*3600).
+        classification (str, optional): BBH/BNS/NSBH. Defaults to 'BBH'.
+        url (str, optional): API link. Defaults to "https://gracedb.ligo.org/api/superevents/".
+
+    Returns:
+        dict: contains all event info
+    """
     GRACEDB_URL = url
     # Define search parameters
     params = {
