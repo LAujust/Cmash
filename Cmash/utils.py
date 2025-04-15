@@ -8,6 +8,8 @@ from astropy.cosmology import Planck18
 from astropy.coordinates import SkyCoord
 from ligo.skymap.postprocess import crossmatch
 import astropy.units as u
+from .data import *
+from .products import *
 
 
 

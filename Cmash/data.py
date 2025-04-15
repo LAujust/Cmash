@@ -16,8 +16,9 @@ def retrieve_epdata(ra=None, dec=None, radius=None, start=None, end=None, url="h
     Returns:
         _type_: response json
     """
+    key_convert = {'ra':'ra','dec':'dec','radius':'radius','start':'start_datetime','end':'end_datetime','url':'url'}
 
-    data = {k: v for k, v in locals().items() if v is not None}
+    data = {key_convert[k]: v for k, v in locals().items() if k in key_convert.keys()}
     del data['url']
 
     response = requests.post(url, data=data)
@@ -85,3 +86,18 @@ def retrieve_gwdata(far=1/(365.25*24*3600),classification='BBH',url="https://gra
                         event_list[event_name] = event
                         print(f"Superevent: {event_name}, FAR: {event['far']*(365.25 * 24 * 3600)} per yr")
     return event_list
+
+
+def retrieve_tns(TNS_BOT_ID,TNS_BOT_NAME):
+    def set_headers() -> dict:
+        """Sets the headers for a TNS search.
+
+        Returns
+        -------
+        headers: TNS headers
+        """
+        headers = {
+            "User-Agent": 'tns_marker{"tns_id": "' + str(TNS_BOT_ID) + '", "type": "bot",'
+            ' "name": "' + str(TNS_BOT_NAME) + '"}'
+        }
+        return headers
