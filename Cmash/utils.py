@@ -8,8 +8,8 @@ from astropy.cosmology import Planck18
 from astropy.coordinates import SkyCoord
 from ligo.skymap.postprocess import crossmatch
 import astropy.units as u
-from .data import *
-from .products import *
+from astropy.time import Time
+import os, sys
 
 
 
@@ -76,3 +76,18 @@ def match_cat(source_cat,cat,radius,nthneighbor=1,seperation=False):
         return source_matched_idx, cat_matched_idx, cat_matched_sep
     else:
         return source_matched_idx, cat_matched_idx
+    
+    
+def toverlap(tstart, tend, obs_start, obs_end):
+    """
+    Args:
+        tstart (astropy.time): window start
+        tend (astropy.time): window end
+        obs_start (astropy.time): obs start
+        obs_end (astropy.time): obs end
+
+    Returns:
+        float: overlap time in sec
+    """
+    tt = min(Time(tend), Time(obs_end)) - max(Time(tstart), Time(obs_start))
+    return max(0, tt.to_value('sec'))
