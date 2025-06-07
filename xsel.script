@@ -1,0 +1,14 @@
+
+
+read event
+/mnt/epdata_pipeline/L23/obs/13600005384
+ep13600005384wxt9po_cl.evt
+
+filter region /mnt/rdliang/AGN/BBH_AGN/data/L23/S240413p_bb/13600005384CMOS9/filtered1/images/200-400/ep13600005384wxt9_200-400-cts.armreg
+filter pha_cutoff 200 400
+filter grade 0-12
+set xybinsize 16
+extract image
+save image /mnt/rdliang/AGN/BBH_AGN/data/L23/S240413p_bb/13600005384CMOS9/filtered1/images/200-400/ep13600005384wxt9_200-400_AF-cts.img
+exit
+no

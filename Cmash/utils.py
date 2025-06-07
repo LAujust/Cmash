@@ -91,3 +91,29 @@ def toverlap(tstart, tend, obs_start, obs_end):
     """
     tt = min(Time(tend), Time(obs_end)) - max(Time(tstart), Time(obs_start))
     return max(0, tt.to_value('sec'))
+
+def on_rm_error(func, path, exc_info):
+    # Try to change the file permission and retry
+    os.chmod(path, 0o777)
+    func(path)
+    
+def clean_folder(folder_path):
+    for root, dirs, files in os.walk(folder_path, topdown=False):
+        # Remove files
+        for file in files:
+            file_path = os.path.join(root, file)
+            try:
+                os.remove(file_path)
+                print(f"Removed file: {file_path}")
+            except Exception as e:
+                print(f"Failed to remove {file_path}: {e}")
+        
+        # Remove empty directories
+        for dir in dirs:
+            dir_path = os.path.join(root, dir)
+            try:
+                os.rmdir(dir_path)
+                print(f"Removed dir: {dir_path}")
+            except Exception as e:
+                print(f"Failed to remove dir {dir_path}: {e}")
+    os.rmdir(folder_path)

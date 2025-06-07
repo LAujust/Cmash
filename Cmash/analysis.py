@@ -4,6 +4,7 @@ from .products import *
 import healpy as hp
 from tqdm import tqdm
 from lal import gpstime
+import shutil
 
 def get_event_info(event):
     t_0_gps = event['t_0']
@@ -12,7 +13,7 @@ def get_event_info(event):
     file_dict = requests.get(file_url).json()
     flink = None
     for key, link in file_dict.items():
-        if ('offline0.fits' in key or 'offline1.fits' in key) and 'Bilby' in key:
+        if ('offline0.fits' in key or 'offline1.fits' in key or 'multiorder.fits' in key) and 'Bilby' in key:
             flink = link
             print(flink)
             break
@@ -48,11 +49,11 @@ def EP_coverage(skymap_url,pointings):
     sample = np.random.choice(np.arange(0,len(prob_norm),1),N,replace=True,p=skymap[0])
     with tqdm(total=N) as pbar:
         for i,ipix in enumerate(sample):
+            pbar.update(1)
             ra, dec = hp.pix2ang(nside,ipix,lonlat=True)
             CL = credible_levels[ipix]
-            if CL < 0.9:
+            if CL <= 0.9:
                 source90 += 1
-                pbar.update(1)
                 c = SkyCoord(ra*u.deg,dec*u.deg)
                 sep = c.separation(EP_pnts)
                 if min(sep.value) < wxt_radius:
@@ -65,6 +66,8 @@ def EP_coverage(skymap_url,pointings):
     return sourceEP/source90
 
 
+
+
 def GW_EP_data_search(gw_info):
     pass
 
@@ -72,10 +75,10 @@ def GW_EP_data_search(gw_info):
 class Search(object):
     
     def __init__(self):
-        self.one_orbit = 3600
+        self.one_orbit = 4300
         self.pointings = None
     
-    def from_gw(self,gw_info,event_name,window=[-50,50],l23=None,l23_dir='/mnt/rdliang/AGN/BBH_AGN/data/L23/',save_pnt=False,pnt_dir='/mnt/rdliang/AGN/BBH_AGN/data/WXT_pnt',plot=False):
+    def from_gw(self,gw_info,event_name,window=[-100,100],l23=None,l23_dir='/mnt/rdliang/AGN/BBH_AGN/data/L23/',save_pnt=False,pnt_dir='/mnt/rdliang/AGN/BBH_AGN/data/WXT_pnt',plot=False):
         #gw info
         self.t_0_utc, self.t_0_gps, self.flink = gw_info
         self.window = window
@@ -115,7 +118,7 @@ class Search(object):
                     expfile = '/mnt/epdata_pipeline/L23/obs/%s/ep%swxt%s.exp'%(obsid,obsid,cmosid)
                     stemout = '%s_%sCMOS%s'%(event_name,obsid,cmosid)
                     stemout = stemout.replace(' ','')
-                    table_data.append([obs_start.iso,epdata[j]['pnt_ra'],epdata[j]['pnt_dec'],clevtfile,expfile,stemout])
+                    table_data.append([obs_start.iso,epdata[j]['pnt_ra'],epdata[j]['pnt_dec'],epdata[j]['upperlimit'],clevtfile,expfile,stemout])
                     
                     #L23 peoducts
                     if l23:
@@ -125,17 +128,33 @@ class Search(object):
                             
                         if l23 == 'bb':
                             bb_products(obsid,cmosid,os.path.join(self.l23_dir,'%sCMOS%s'%(obsid,cmosid))+'/test.json')
+                            #check transient detected
+                            with open(os.path.join(self.l23_dir,'%sCMOS%s'%(obsid,cmosid))+'/filtered1/transient/transient.list') as file:
+                                content = file.read()
+                                file.close()
+                                if len(content)==0:
+                                    #remove null detection products
+                                    path = os.path.join(self.l23_dir,'%sCMOS%s'%(obsid,cmosid))
+                                    print('===============')
+                                    clean_folder(path)
+                                    
+                                    #subprocess.run(['rm','-rf',path])
+                                    #os.system('rm -rf %s'%path)
+                                
                         elif l23 == 'default':
                             extract_products(clevtfile,expfile,os.path.join(self.l23_dir,'%sCMOS%s'%(obsid,cmosid)),
                                 stemout=stemout,
                                 ra=epdata[j]['pnt_ra'],dec=epdata[j]['pnt_dec'])
                         
             self.pnt_dir = os.path.join(pnt_dir,'%s_%s.fits'%(event_name,window[1]-window[0]))    
-            self.pointings = Table(np.array(table_data),names=['t','ra','dec','evt','exp','stemout'],dtype=['U30']+['f8']*2+['U75']*3)
+            self.pointings = Table(np.array(table_data),names=['t','ra','dec','uplim','evt','exp','stemout'],dtype=['U30']+['f8']*3+['U75']*3)
             
             if maxoverlap > 0.:
                 cov = EP_coverage(self.flink,self.pointings)
                 print('Time overlap %.1f s & Sky coverage %.2f for %s'%(maxoverlap,cov,event_name))
+            else:
+                print('No temporal overlap for %s'%event_name)
+
              
         if save_pnt:
             self.pointings.write(self.pnt_dir,format='fits',overwrite=True)

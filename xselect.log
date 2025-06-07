@@ -1,0 +1,70 @@
+!xselect 07:42:22 09-May-2025
+!xsel5496:SUZAKU >
+!xsel5496:SUZAKU > read event
+!> Enter the Event file dir >[/mnt/epdata_pipeline/L23/obs/13600005384] /mnt/ep
+data_pipeline/L23/obs/13600005384
+!> Enter Event file list >[ep13600005384wxt9po_cl.evt] ep13600005384wxt9po_cl.e
+vt
+Got new mission: EP
+!> Reset the mission ? >[yes]
+ Notes: XSELECT set up for      EP
+ Time keyword is TIME       in units of s
+ Default timing binsize =   5.0000
+ 
+Setting...
+ Image  keywords   = X          Y           with binning =    1
+ WMAP   keywords   = X          Y           with binning =    1
+ Energy keyword   = PI                     with binning =    1
+ 
+Getting Min and Max for Energy Column...
+Got min and max for PI:     0   1023
+ 
+Got the minimum time resolution of the read data:  0.50000E-01
+MJDREF =  5.8849000800741E+04 with TIMESYS = TT
+ Number of files read in:            1
+liang/AGN/BBH_AGN/Cmash/xsel5496_read_cat.xsl" "keywords=@/mnt/rdliang/AGN/BBH_
+AGN/Cmash/xsel5496_obslist.def" maxlen=11 minlen=0 iform=I8 "eform=E8.2" quiet=
+yes omit=no
+******************** Observation Catalogue ********************
+ 
+Data Directory is: /mnt/epdata_pipeline/L23/obs/13600005384/
+HK Directory is: /mnt/epdata_pipeline/L23/obs/13600005384/
+lay.def" "-" prhead = no pagewidth = 128 wrap = yes showunit = no tdisp = yes
+ 
+ 
+        OBJECT      DETNAM      OBS_ID      DATE-OBS                DATAMODE
+      1 13600005384 CMOS9       13600005384 2024-04-13T01:32:57.034 PHOTON
+!xsel5496:EP-WXT-PHOTON > filter region /mnt/rdliang/AGN/BBH_AGN/data/L23/S2404
+13p_bb/13600005384CMOS9/filtered1/images/200-400/ep13600005384wxt9_200-400-cts.
+armreg
+REGION selection file /mnt/rdliang/AGN/BBH_AGN/data/L23/S240413p_bb/13600005384
+CMOS9/filtered1/images/200-400/ep13600005384wxt9_200-400-cts.armreg not found
+!xsel5496:EP-WXT-PHOTON > filter pha_cutoff 200 400
+!xsel5496:EP-WXT-PHOTON > filter grade 0-12
+!xsel5496:EP-WXT-PHOTON > set xybinsize 16
+!xsel5496:EP-WXT-PHOTON > extract image
+e = NONE qdpfile = NONE fitsbinlc = NONE unbinlc = NONE phafile = NONE imgfile 
+= "xsel5496_image.xsl" fullimage = yes timefile = NONE adjustgti=no gstring = 0
+-12 timeorder = no xcolf = X ycolf = Y xcolh = X ycolh = Y xfkey = TLMAX yfkey 
+= TLMAX xhkey = TLMAX yhkey = TLMAX phamax = TLMAX specbin = 1 binh = 1 binf = 
+16 binlc = "5.0000000E+00" tcol = TIME ecol = PI ccol = NONE gcol = GRADE gti =
+ GTI events = EVENTS gtitxt = "xsel5496_ascii_out.xsl" timeref = "40000.00" wtm
+apb = yes wtmapfix = yes swmapx = no swmapy = no wmapver = 2 gtinam = GTI exitn
+ow = no
+extractor v5.37     1 Apr 2020
+ Getting FITS WCS Keywords
+ Doing file: /mnt/epdata_pipeline/L23/obs/13600005384/ep13600005384wxt9po_cl.ev
+t
+          Total      Good    Bad: Time     Phase     Grade       Cut
+          99751     24553            0         0         0     75198
+===============================================================================
+    Grand Total      Good    Bad: Time     Phase     Grade       Cut
+          99751     24553            0         0         0     75198
+   in  4114.7     seconds
+ Image            has    24553 counts for  5.967     counts/sec
+_bb/13600005384CMOS9/filtered1/images/200-400/ep13600005384wxt9_200-400_AF-cts.
+img
+Wrote image to file /mnt/rdliang/AGN/BBH_AGN/data/L23/S240413p_bb/13600005384CM
+OS9/filtered1/images/200-400/ep13600005384wxt9_200-400_AF-cts.img
+!xsel5496:EP-WXT-PHOTON > exit
+!> Save this session? >[no] no

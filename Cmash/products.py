@@ -7,7 +7,6 @@ def extract_products(evtname,expname,out_dir,stemout,ra,dec,radius=67,regionfile
             'outdir=%s'%out_dir,
             'stemout=%s'%stemout,
             'bkgextract=yes',
-            'imagefile=NONE',
             'expofile=%s'%expname,
             'binsize=%.1f'%binsize,
             'chatter=2',]
